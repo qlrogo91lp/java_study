@@ -1,21 +1,17 @@
 package main.codetest.basic.architecture;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Archi {
-    static final int[] QUESTIONS = {7, 8, 9};
+    public static final int[] QUESTIONS = {7, 8, 9, 10, 11};
+    public static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
         Archi exe = new Archi();
         System.out.println("프로그램 시작 >>> ");
 
         while (true) {
-            Scanner sc = new Scanner(System.in);
             System.out.println("문제 번호를 입력하세요 : (종료하려면 0 입력)");
             int input = sc.nextInt();
 
@@ -30,6 +26,12 @@ public class Archi {
                     break;
                 case 9:
                     exe.no009();
+                    break;
+                case 10:
+                    exe.no010();
+                    break;
+                case 11:
+                    exe.no011();
                     break;
                 default:
                     System.out.println("없는 문제 번호 입니다.");
@@ -52,6 +54,93 @@ public class Archi {
 
         }
         System.out.println("프로그램 종료 >>> ");
+    }
+
+    /**
+     * 문제 011 스택으로 오름차순 수열 만들기 - 제한시간 2초 난이도 실버3, 백준 1874번
+     */
+    private void no011() {
+        System.out.println("문제 11 >>> : ");
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt(); // 수열 개수
+        int[] A = new int[N]; // 수열 배열
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < N; i++) {
+            A[i] = sc.nextInt();
+        }
+
+        StringBuffer bf = new StringBuffer();
+        int num = 1;
+        boolean result = true;
+        for (int i = 0; i < N; i++) {
+            // 현재 수열 값 >= 오름차순 자연수 : 값이 같아질 때까지 push() 수행
+            if (A[i] >= num) {
+                while (A[i] >= num) {
+                    stack.push(num++);
+                    bf.append("+\n");
+                }
+                stack.pop();
+                bf.append("-\n");
+            }
+            // 현재 수열 값 < 오름차순 자연수 : pop()을 수행해 수열 원소를 꺼냄
+            else {
+                int n = stack.pop();
+                // 스택의 가장 위의 수가 만들어야 하는 수열의 수보다 크면 수열을 출력할 수 없음
+                if (n > A[i]) {
+                    System.out.println("NO");
+                    result = false;
+                    break;
+                } else {
+                    bf.append("-\n");
+                }
+            }
+        }
+        if (result) {
+            System.out.println(bf);
+        }
+        System.out.println("종료 >>>");
+    }
+
+    // 노드 클래스
+    public static class Node {
+        public int value;
+        public int index;
+
+        Node(int value, int index) {
+            this.value = value;
+            this.index = index;
+        }
+    }
+
+    /**
+     * 문제 010 최솟값 찾기 - 제한시간 2.4초 난이도 플래티넘, 백준 11003번
+     */
+    private void no010() throws IOException {
+        System.out.println("문제 10 >>> : ");
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(bf.readLine());
+        int N = Integer.parseInt(st.nextToken()); // 숫자의 개수
+        int L = Integer.parseInt(st.nextToken()); // 슬라이딩 윈도우의 크기
+        st = new StringTokenizer(bf.readLine());
+        Deque<Node> mydeque = new LinkedList<>();
+
+        for (int i = 0; i < N; i++) {
+            int now = Integer.parseInt(st.nextToken());
+            // 새로운 값이 들어올 때마다 정렬 대신 현재 수보다 큰 값을 덱에서 제거해 시간 복잡도를 줄임.
+
+            while (!mydeque.isEmpty() && mydeque.getLast().value > now) {
+                mydeque.removeLast();
+            }
+            mydeque.addLast(new Node(now, i));
+            // 범위에서 벗어난 값은 덱에서 제거
+            if (mydeque.getFirst().index <= i - L) {
+                mydeque.removeFirst();
+            }
+            bw.write(mydeque.getFirst().value + " ");
+        }
+        bw.flush();
     }
 
     int[] checkArr; // 비밀번호 체크 배열
@@ -188,7 +277,7 @@ public class Archi {
                         break;
                     } else if (i == k) {
                         i++;
-                    } else if (j == k) {
+                    } else { // else if (j == k)
                         j--;
                     }
                 } else if (A[i] + A[j] < find) {
