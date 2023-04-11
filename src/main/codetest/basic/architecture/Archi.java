@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Archi {
-    public static final int[] QUESTIONS = {7, 8, 9, 10, 11};
+    public static final int[] QUESTIONS = {7, 8, 9, 10, 11, 12};
     public static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
@@ -33,6 +33,9 @@ public class Archi {
                 case 11:
                     exe.no011();
                     break;
+                case 12:
+                    exe.no012();
+                    break;
                 default:
                     System.out.println("없는 문제 번호 입니다.");
                     System.out.print("문제 목록 : [");
@@ -56,8 +59,45 @@ public class Archi {
         System.out.println("프로그램 종료 >>> ");
     }
 
+    /*
+    * 문제 012 오큰수 구하기 - 제한시간 1초, 난이도 골드4, 백준 1729번
+    */
+    private void no012() throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(bf.readLine());
+        int[] A = new int[n];   // 수열 배열 생성
+        int[] ans = new int[n]; // 정답 배열 생성
+        String[] str = bf.readLine().split(" ");
+        for (int i = 0; i < n; i++) {
+            A[i] = Integer.parseInt(str[i]);
+        }
+        Stack<Integer> myStack = new Stack<>();
+        myStack.push(0);    // 처음에는 항상 스택이 비어 있으므로 최초 값 push해서 초기화
+
+        for (int i = 1; i < n; i++) {
+            // 스택이 비어 있지 않고 현재 수열이 스택 top 인덱스가 가리키는 수열보다 클 경우
+            while (!myStack.isEmpty() && A[myStack.peek()] < A[i]) {
+                ans[myStack.pop()] = A[i];
+            }
+            myStack.push(i);
+        }
+        // 반복문을 다 돌고 나왔는데 스택이 비어 있지 않다면 빌때까지 반복
+        while (!myStack.isEmpty()) {
+            // 오큰수가 없으면 -1
+            ans[myStack.pop()] = -1;
+        }
+        BufferedWriter bw = new BufferedWriter((new OutputStreamWriter((System.out))));
+        // ans[] 출력
+        for (int i = 0; i < n; i++) {
+            bw.write(ans[i] + " ");
+        }
+        bw.write("\n");
+        bw.flush();
+    }
+
+
     /**
-     * 문제 011 스택으로 오름차순 수열 만들기 - 제한시간 2초 난이도 실버3, 백준 1874번
+     * 문제 011 스택으로 오름차순 수열 만들기 - 제한시간 2초, 난이도 실버3, 백준 1874번
      */
     private void no011() {
         System.out.println("문제 11 >>> : ");
