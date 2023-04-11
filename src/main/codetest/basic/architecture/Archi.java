@@ -36,6 +36,9 @@ public class Archi {
                 case 12:
                     exe.no012();
                     break;
+                case 13:
+                    exe.no013();
+                    break;
                 default:
                     System.out.println("없는 문제 번호 입니다.");
                     System.out.print("문제 목록 : [");
@@ -57,6 +60,23 @@ public class Archi {
 
         }
         System.out.println("프로그램 종료 >>> ");
+    }
+
+    /*
+    * 문제 013 카드 게임
+    */
+    private void no013() {
+        Scanner sc = new Scanner(System.in);
+        Queue<Integer> myQueue = new LinkedList<>();
+        int N = sc.nextInt();
+        for (int i = 0; i < N; i++) {
+            myQueue.add(i);
+        }
+        while (myQueue.size() > 1) {
+            myQueue.poll();
+            myQueue.add(myQueue.poll());
+        }
+        System.out.println(myQueue.poll());
     }
 
     /*
