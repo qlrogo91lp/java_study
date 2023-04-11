@@ -3,6 +3,9 @@ package main.codetest.basic.architecture;
 import java.io.*;
 import java.util.*;
 
+/*
+* 자료구조
+*/
 public class Archi {
     public static final int[] QUESTIONS = {7, 8, 9, 10, 11, 12};
     public static final Scanner sc = new Scanner(System.in);
@@ -39,6 +42,9 @@ public class Archi {
                 case 13:
                     exe.no013();
                     break;
+                case 14:
+                    exe.no014();
+                    break;
                 default:
                     System.out.println("없는 문제 번호 입니다.");
                     System.out.print("문제 목록 : [");
@@ -60,6 +66,36 @@ public class Archi {
 
         }
         System.out.println("프로그램 종료 >>> ");
+    }
+
+    /*
+    * 문제 014 절댓값 힙 구현하기
+    */
+    private void no014() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        PriorityQueue<Integer> myQueue = new PriorityQueue<>((o1, o2) -> {
+            int first_abs = Math.abs(o1);
+            int second_abs = Math.abs(o2);
+            if (first_abs == second_abs) {
+                return o1 > o2 ? 1 : -1; // 절댓값이 같으면 음수 우선 정렬
+            } else {
+                return first_abs - second_abs; // 절댓값 기준으로 정렬
+            }
+        });
+
+        for (int i = 0; i < N; i++) {
+            int request = Integer.parseInt(br.readLine());
+            if (request == 0) {
+                if (myQueue.isEmpty()) {
+                    System.out.println("0");
+                } else {
+                    System.out.println(myQueue.poll());
+                }
+            } else {
+                myQueue.add(request);
+            }
+        }
     }
 
     /*
