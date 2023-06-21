@@ -7,7 +7,7 @@ import java.util.*;
 * 자료구조
 */
 public class Archi {
-    public static final int[] QUESTIONS = {7, 8, 9, 10, 11, 12};
+    public static final int[] QUESTIONS = {1, 2, 7, 8, 9, 10, 11, 12};
     public static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
@@ -20,6 +20,12 @@ public class Archi {
 
             switch (input) {
                 case 0:
+                    break;
+                case 1:
+                    exe.no001();
+                    break;
+                case 2:
+                    exe.no002();
                     break;
                 case 7:
                     exe.no007();
@@ -66,6 +72,43 @@ public class Archi {
 
         }
         System.out.println("프로그램 종료 >>> ");
+    }
+
+    /**
+     * 문제 001 숫자의 합 구하기
+     **/
+    private void no001() {
+        System.out.println("no001 >>> ");
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        String sNum = sc.next();
+        char[] cNum = sNum.toCharArray();
+        int sum = 0;
+
+        for (int i = 0; i < N; i++) {
+            sum += cNum[i] - '0'; // 정수형을 변환
+        }
+
+        System.out.println(sum);
+    }
+
+    /**
+     * 문제 001 숫자의 합 구하기
+     **/
+    private void no002() {
+        System.out.println("no002 >>> ");
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        long sum = 0;
+        long max = 0;
+        for (int i = 0; i < N; i++) {
+            int temp = sc.nextInt();
+            if(max < temp)
+                max = temp;
+            sum += temp;
+        }
+
+        System.out.println(sum * 100.0 / max / N);
     }
 
     /*
@@ -420,5 +463,4 @@ public class Archi {
         System.out.println(count);
         System.out.println("종료 >>>");
     }
-
 }
