@@ -7,7 +7,7 @@ import java.util.*;
 * 자료구조
 */
 public class Archi {
-    public static final int[] QUESTIONS = {1, 2, 7, 8, 9, 10, 11, 12};
+    public static final int[] QUESTIONS = {1, 2, 3, 4, 7, 8, 9, 10, 11, 12};
     public static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
@@ -26,6 +26,12 @@ public class Archi {
                     break;
                 case 2:
                     exe.no002();
+                    break;
+                case 3:
+                    exe.no003();
+                    break;
+                case 4:
+                    exe.no004();
                     break;
                 case 7:
                     exe.no007();
@@ -75,6 +81,66 @@ public class Archi {
     }
 
     /**
+     * 문제 003 구간 합 구하기1
+     **/
+    private void no003() throws IOException {
+        System.out.println("no002 >>> ");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int suNo = Integer.parseInt(st.nextToken()); // 숫자 개수
+        int quizNo = Integer.parseInt(st.nextToken()); // 질의 개수
+        // 합 배열 생성
+        long[] S = new long[suNo + 1]; // 0번째 인덱스는 사용하지 않기 위해서
+        st = new StringTokenizer(br.readLine());
+        // 숫자를 입력 받음과 동시에 합배열 생성
+        for (int i = 1; i <= suNo; i++) {
+            S[i] = S[i - 1] + Integer.parseInt(st.nextToken());
+        }
+        // 질의에 대한 답 출력
+        for (int q = 0; q < quizNo; q++) {
+            st = new StringTokenizer(br.readLine());
+            int i = Integer.parseInt(st.nextToken());
+            int j = Integer.parseInt(st.nextToken());
+            System.out.println(S[j] - S[i -1]);
+        }
+        System.out.println("프로그램 종료 >>> ");
+    }
+
+    /**
+     * 문제 004 구간 합 구하기2
+     **/
+    private void no004() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken()); // 배열 크기
+        int M  = Integer.parseInt(st.nextToken()); // 질의 수
+        int[][] A = new int[N + 1][N + 1]; // 0번재 인덱스는 사용하지 않기 위해서
+        for (int i = 1; i <= N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 1; j <= N; j++) {
+                A[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+        // 구간 합 구하기
+        int[][] D = new int[N + 1][N + 1];
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                D[i][j] = D[i - 1][j] + D[i][j - 1] - D[i - 1][j - 1] + A[i][j];
+            }
+        }
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken());
+            int y1 = Integer.parseInt(st.nextToken());
+            int x2 = Integer.parseInt(st.nextToken());
+            int y2 = Integer.parseInt(st.nextToken());
+            // 구간 합 배열로 질의 답변 출력
+            int result = D[x2][y2] - D[x1-1][y1] - D[x1][y1-1] + D[x1-1][y1-1];
+            System.out.println(result);
+        }
+    }
+
+    /**
      * 문제 001 숫자의 합 구하기
      **/
     private void no001() {
@@ -93,7 +159,7 @@ public class Archi {
     }
 
     /**
-     * 문제 001 숫자의 합 구하기
+     * 문제 002 평균 구하기
      **/
     private void no002() {
         System.out.println("no002 >>> ");
