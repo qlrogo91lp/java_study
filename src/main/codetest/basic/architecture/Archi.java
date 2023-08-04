@@ -7,7 +7,7 @@ import java.util.*;
 * 자료구조
 */
 public class Archi {
-    public static final int[] QUESTIONS = {1, 2, 3, 4, 7, 8, 9, 10, 11, 12};
+    public static final int[] QUESTIONS = {1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14};
     public static final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
@@ -32,6 +32,9 @@ public class Archi {
                     break;
                 case 4:
                     exe.no004();
+                    break;
+                case 6:
+                    exe.no006();
                     break;
                 case 7:
                     exe.no007();
@@ -78,6 +81,70 @@ public class Archi {
 
         }
         System.out.println("프로그램 종료 >>> ");
+    }
+
+    /**
+     * 투포인터
+     * 문제 006 연속된 자연수의 합 구하기
+     */
+    private void no006() throws IOException {
+        System.out.println("no006 >>> : ");
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int count = 1; // 자기 자신 초기화
+        // 같은 곳에서 출발
+        int start_index = 1;
+        int end_index = 1;
+        int sum = 1;
+        // end_index 값이 N에 도착하면 종료
+        while (end_index != N) {
+            if (sum == N) {
+                count++;
+                end_index++;
+                sum += end_index++;
+            } else if (sum > N) {
+                sum -= start_index;
+                start_index++;
+            } else if (sum < N) {
+                end_index++;
+                sum += end_index;
+            }
+        }
+        System.out.println(count);
+    }
+
+    /**
+     * 문제 007 주몽의 명령 - 제한 시간 2초, 난이도 실버4, 백준 1940번
+     */
+    private void no007() throws IOException {
+        System.out.println("no007 >>> : ");
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(bf.readLine());
+        int M = Integer.parseInt(bf.readLine());
+        int[] A = new int[N];
+        StringTokenizer st = new StringTokenizer(bf.readLine());
+
+        for (int i = 0; i < N; i++) {
+            A[i] = Integer.parseInt(st.nextToken());
+        }
+        Arrays.sort(A);
+        int count = 0;
+        int i = 0; // 작은 번호 index
+        int j = N - 1; // 큰 번호 index
+
+        while (i < j) {
+            if (A[i] + A[j] < M) {
+                i++;
+            } else if (A[i] + A[j] > M) {
+                j--;
+            } else {
+                count++;
+                i++;
+                j--;
+            }
+        }
+        System.out.println(count);
+        System.out.println("종료 >>>");
     }
 
     /**
@@ -307,7 +374,7 @@ public class Archi {
         System.out.println("종료 >>>");
     }
 
-    // 노드 클래스
+    // 문제010 노드 클래스
     public static class Node {
         public int value;
         public int index;
@@ -322,7 +389,7 @@ public class Archi {
      * 문제 010 최솟값 찾기 - 제한시간 2.4초 난이도 플래티넘, 백준 11003번
      */
     private void no010() throws IOException {
-        System.out.println("문제 10 >>> : ");
+        System.out.println("no010 >>> : ");
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(bf.readLine());
@@ -331,7 +398,9 @@ public class Archi {
         st = new StringTokenizer(bf.readLine());
         Deque<Node> mydeque = new LinkedList<>();
 
+        // 인덱스 반복
         for (int i = 0; i < N; i++) {
+            // 현재 인덱스의 값
             int now = Integer.parseInt(st.nextToken());
             // 새로운 값이 들어올 때마다 정렬 대신 현재 수보다 큰 값을 덱에서 제거해 시간 복잡도를 줄임.
 
@@ -339,7 +408,7 @@ public class Archi {
                 mydeque.removeLast();
             }
             mydeque.addLast(new Node(now, i));
-            // 범위에서 벗어난 값은 덱에서 제거
+            // (현재인덱스에서 슬라이딩 윈도우 크기를 뺀 값)이 맨 앞의 인덱스보다 같거나 커지면 앞의 인덱스 제거
             if (mydeque.getFirst().index <= i - L) {
                 mydeque.removeFirst();
             }
@@ -348,6 +417,7 @@ public class Archi {
         bw.flush();
     }
 
+    // no009
     int[] checkArr; // 비밀번호 체크 배열
     int[] myArr; // 현재 상태 배열
     int checkSecret; // 몇 개의 문자와 관련된 개수를 충족했는지 판단하는 변수
@@ -356,20 +426,26 @@ public class Archi {
      * 문제 009 DNA 비밀번호 - 제한시간 2초, 난이도 실버5, 백준 12891번
      */
     private void no009() throws IOException {
-        System.out.println("문제 9 >>> : ");
+        System.out.println("no 009 >>> : ");
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        // 입력 1
         StringTokenizer st = new StringTokenizer(bf.readLine());
         int S = Integer.parseInt(st.nextToken()); // 문자열의 크기
         int P = Integer.parseInt(st.nextToken()); // 부분 문자열의 크기
         int Result = 0;
-        char[] A;
+        char[] A; // 문자열 데이터 (체크 해야할 대상)
+        // A, C, G, T
         checkArr = new int[4];
         myArr = new int[4];
         checkSecret = 0;
-        A = bf.readLine().toCharArray();
+        // 입력 2
+        A = bf.readLine().toCharArray(); // 문자열 -> char 배열로 변환
+        // 입력 3
         st = new StringTokenizer(bf.readLine());
+        //
         for (int i = 0; i < 4; i++) {
             checkArr[i] = Integer.parseInt(st.nextToken());
+            // 0인 경우는 만족을 할 필요가 없기때문에 checkSecret값을 증가
             if (checkArr[i] == 0)
                 checkSecret++;
         }
@@ -377,10 +453,12 @@ public class Archi {
         for (int i = 0; i < P; i++) {
             Add(A[i]);
         }
+        // 4개가 일치해야 DNA 비밀번호가 됨
         if (checkSecret == 4) {
             Result++;
         }
-        // 오른쪽으로 옮기면서 추가와 제거를 반복
+        // 슬라이딩 윈도우 처리부분
+        // 오른쪽으로 옮기면서 추가와 제거를반복
         for (int i = P; i < S; i++) {
             int j = i - P;
             // 오른쪽으로 한칸 옮긴 후
@@ -397,28 +475,32 @@ public class Archi {
     /*
         자바 14부터 향상된 switch 구문 추가됨. break 누락으로 인한 실수 제거.
     */
+    // 새로 들어온 문자를 처리하는 함수
     private void Add(char c) {
+        // A[]
+        // A[0] A[1]    A[2]    A[3]
+        // 'A'  'C'     'G'     'T'
         switch (c) {
             case 'A' -> {
-                myArr[0]++;
+                myArr[0]++; // 현재 상태 배열에 추가
                 if (myArr[0] == checkArr[0]) {
                     checkSecret++;
                 }
             }
             case 'C'-> {
-                myArr[1]++;
+                myArr[1]++; // 현재 상태 배열에 추가
                 if (myArr[1] == checkArr[1]) {
                     checkSecret++;
                 }
             }
             case 'G' -> {
-                myArr[2]++;
+                myArr[2]++; // 현재 상태 배열에 추가
                 if (myArr[2] == checkArr[2]) {
                     checkSecret++;
                 }
             }
             case 'T' -> {
-                myArr[3]++;
+                myArr[3]++; // 현재 상태 배열에 추가
                 if (myArr[3] == checkArr[3]) {
                     checkSecret++;
                 }
@@ -426,6 +508,7 @@ public class Archi {
         }
     }
 
+    // 제거되는 문자를 처리하는 함수
     private void Remove(char c) {
         switch (c) {
             case 'A' -> {
@@ -494,39 +577,5 @@ public class Archi {
         }
         System.out.println(Result);
         System.out.println("종료 >>> ");
-    }
-
-    /**
-     * 문제 007 주몽의 명령 - 제한 시간 2초, 난이도 실버4, 백준 1940번
-     */
-    private void no007() throws IOException {
-        System.out.println("문제 7 >>> : ");
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(bf.readLine());
-        int M = Integer.parseInt(bf.readLine());
-        int[] A = new int[N];
-        StringTokenizer st = new StringTokenizer(bf.readLine());
-
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
-        }
-        Arrays.sort(A);
-        int count = 0;
-        int i = 0; // 작은 번호 index
-        int j = N - 1; // 큰 번호 index
-
-        while (i < j) {
-            if (A[i] + A[j] < M) {
-                i++;
-            } else if (A[i] + A[j] > M) {
-                j--;
-            } else {
-                count++;
-                i++;
-                j--;
-            }
-        }
-        System.out.println(count);
-        System.out.println("종료 >>>");
     }
 }
